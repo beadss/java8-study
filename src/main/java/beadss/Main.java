@@ -1,79 +1,18 @@
 package beadss;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.Vector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
-	
-	
-	private static int price = 1000;
-	
 	public static void main(String[] args) {
-		
 		Scanner scan = new Scanner(System.in);
         
-        System.out.println("±¸ÀÔ±İ¾×À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
-        
-        //int amount = scan.nextInt();
-        int amount = 14000;
-        
-        Vector<List<Integer>> expectedLottoList = new Vector<List<Integer>>(amount/price); 
-        
-        Random random = new Random();
-        
-        for(int i = 0; i < amount/price; i++) {
-        	expectedLottoList.add(Stream.generate(() -> random.nextInt(44) + 1).distinct().limit(6).collect(Collectors.toList()));
-        }
-        
-        expectedLottoList.stream().forEach(System.out::println);
-        
-        System.out.println("Áö³­ ÁÖ ´çÃ· ¹øÈ£¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
-        //scan.nextLine();
-        //String correctLottoString = scan.nextLine();
-        
-        String correctLottoString = "1,2,3,4,5,6";
-       
-        List<Integer> correctLotto = new ArrayList<Integer>();
-        
-        Arrays.asList(correctLottoString.split(","))
-        .subList(0, 6)
-        .stream()
-        .forEach((numberStr)->{correctLotto.add(Integer.parseInt(numberStr.trim()));});
-        
-        int threeCount = 0;
-        int fourCount = 0;
-        int fiveCount = 0;
-        int sixCount = 0;
-        
-        
-        for(List<Integer> lotto : expectedLottoList) {        	
-        	long matchCount = lotto.stream().filter((expectedNumber) -> correctLotto.stream().anyMatch((number) -> number == expectedNumber)).count();
-        	
-        	if(matchCount == 3) {
-        		threeCount++;
-        	} else if(matchCount == 4) {
-        		fourCount++;
-        	} else if(matchCount == 5) {
-        		fiveCount++;
-        	} else if(matchCount == 6) {
-        		sixCount++;
-        	}
-        }
-        
-        System.out.println("´çÃ· Åë°è");
-        System.out.println("---------");
-        System.out.println(String.format("3°³ ÀÏÄ¡ (5000¿ø)- %d°³", threeCount));
-        System.out.println(String.format("4°³ ÀÏÄ¡ (50000¿ø)- %d°³", fourCount));
-        System.out.println(String.format("5°³ ÀÏÄ¡ (150000¿ø)- %d°³", fiveCount));
-        System.out.println(String.format("6°³ ÀÏÄ¡ (2000000000¿ø)- %d°³", sixCount));
-        System.out.println(String.format("ÃÑ ¼öÀÍ·üÀº %d%%ÀÔ´Ï´Ù.", (threeCount*5000+fourCount*50000+fiveCount*150000+sixCount*2000000000)/amount*100));
-        
-	}
+        System.out.println("êµ¬ì… ê¸ˆì•¡ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
 
+		LottoGame game = new LottoGame(scan.nextInt());
+
+		scan.nextLine();
+        System.out.println("ì§€ë‚œ ì£¼ ë‹¹ì²¨ ë²ˆí˜¸ë¥¼ ì…ë ¥í•´ì£¼ì„¸ìš”.");
+
+		game.processResult(Lotto.parse(scan.nextLine()));
+	}
 }
