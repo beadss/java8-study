@@ -11,7 +11,7 @@ public class LottoGame {
 
     private Set<Integer> winningNumberList;
 
-    private static HashMap<Integer, Integer> priceMap = new HashMap();
+    private static HashMap<Integer, Integer> priceMap = new HashMap<>();
 
     public LottoGame(int totalPrice, Set<Integer> winningNumberList) {
         this.totalPrice = totalPrice;
@@ -28,43 +28,30 @@ public class LottoGame {
         while (totalCount > 0) {
             Lotto lotto = new Lotto();
             lotto.setRandomNumberList(getRandomNumber());
-            lotto.setMatchCount(getMatchCountStream(lotto.getRandomNumberList()));
+            lotto.setMatchCount((int) getMatchCountStream(lotto.getRandomNumberList()));
             lottoList.add(lotto);
 
             System.out.println("List : " + lotto.getRandomNumberList());
             System.out.println("count : " + lotto.getMatchCount());
             totalCount--;
         }
-
-        return "수익률은 " + getResult(lottoList) + "입니다.";
+        int result = getResult(this.lottoList);
+        return "수익률은 " + result + "입니다.";
     }
 
-    public double getResult(List<Lotto> resultList) {
+    public int getResult(List<Lotto> resultList) {
         int result = 0;
         for (Lotto lotto : resultList) {
-            if (priceMap.containsKey(lotto.getMatchCount()))
+            if (priceMap.containsKey(lotto.getMatchCount())) {
                 result += priceMap.get(lotto.getMatchCount());
-        }
-
-        return (result / totalPrice) * 100;
-    }
-
-    /**
-     * 당첨 개수
-     */
-    public int getMatchCount(Set<Integer> randomNumberList) {
-        int count = 0;
-        for (Integer winningNumber : winningNumberList) {
-            if (randomNumberList.contains(winningNumber)) {
-                count++;
             }
         }
-        return count;
+        return (result / totalPrice) * 100;
     }
 
     public long getMatchCountStream(Set<Integer> randomNumberList) {
         return randomNumberList.stream()
-                .filter( n ->  winningNumberList.contains(n))
+                .filter(n -> winningNumberList.contains(n))
                 .count();
     }
 

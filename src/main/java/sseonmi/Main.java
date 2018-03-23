@@ -13,7 +13,7 @@ public class Main {
 
         System.out.println("winningNumber : " + winningList);
 
-        LottoGame lottoGame = new LottoGame(3000, winningList);
+        LottoGame lottoGame = new LottoGame(5000, winningList);
 
         System.out.println(lottoGame.start());
     }
