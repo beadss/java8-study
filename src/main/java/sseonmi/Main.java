@@ -15,7 +15,7 @@ public class Main {
 
         LottoGame lottoGame = new LottoGame(3000, winningList);
 
-        System.out.println("result" + lottoGame.start());
+        System.out.println(lottoGame.start());
     }
 
 

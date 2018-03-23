@@ -5,13 +5,13 @@ import java.util.Set;
 public class Lotto {
     private Set<Integer> randomNumberList;
 
-    private int matchCount;
+    private long matchCount;
 
     public Set<Integer> getRandomNumberList() {
         return randomNumberList;
     }
 
-    public int getMatchCount() {
+    public long getMatchCount() {
         return matchCount;
     }
 
@@ -19,7 +19,7 @@ public class Lotto {
         this.randomNumberList = randomNumberList;
     }
 
-    public void setMatchCount(int matchCount) {
+    public void setMatchCount(long matchCount) {
         this.matchCount = matchCount;
     }
 }

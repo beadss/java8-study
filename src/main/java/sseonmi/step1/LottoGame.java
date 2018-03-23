@@ -14,10 +14,10 @@ public class LottoGame {
     private static HashMap<Integer, Integer> priceMap = new HashMap();
 
     public LottoGame(int totalPrice, Set<Integer> winningNumberList) {
-        super();
         this.totalPrice = totalPrice;
         this.winningNumberList = winningNumberList;
         this.totalCount = totalPrice / PRICE;
+
         this.priceMap.put(3, 5000);
         this.priceMap.put(4, 50000);
         this.priceMap.put(5, 150000);
@@ -28,14 +28,15 @@ public class LottoGame {
         while (totalCount > 0) {
             Lotto lotto = new Lotto();
             lotto.setRandomNumberList(getRandomNumber());
-            lotto.setMatchCount(getMatchCount(lotto.getRandomNumberList()));
+            lotto.setMatchCount(getMatchCountStream(lotto.getRandomNumberList()));
             lottoList.add(lotto);
+
             System.out.println("List : " + lotto.getRandomNumberList());
             System.out.println("count : " + lotto.getMatchCount());
             totalCount--;
         }
 
-        return getResult(this.lottoList) + "";
+        return "수익률은 " + getResult(lottoList) + "입니다.";
     }
 
     public double getResult(List<Lotto> resultList) {
@@ -59,6 +60,12 @@ public class LottoGame {
             }
         }
         return count;
+    }
+
+    public long getMatchCountStream(Set<Integer> randomNumberList) {
+        return randomNumberList.stream()
+                .filter( n ->  winningNumberList.contains(n))
+                .count();
     }
 
     /**
