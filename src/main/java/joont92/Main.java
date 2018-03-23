@@ -28,8 +28,7 @@ public class Main {
 		// 당첨번호 set
 		lottoMachine.setWinningNumber();
 
-		// 추첨 및 통계 출력
+		// 당첨여부 확인!
 		lottoMachine.draw(lottoList);
-		lottoMachine.stats(lottoList);
 	}
 }

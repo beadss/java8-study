@@ -5,7 +5,7 @@ import java.util.*;
 public class LottoMachine {
     private static final Scanner scanner = new Scanner(System.in);
     private static final int LOTTO_PRICE = 1000;
-    private static final int LIMIT_PRICE = 1000000;
+    private static final int LIMIT_PRICE = 100000;
 
     private List<Integer> winningNumber = null;
 
@@ -46,6 +46,8 @@ public class LottoMachine {
                 } else{
                     if(!winningNumber.contains(num)){
                         winningNumber.add(num);
+                    } else{
+                        System.out.println("이미 등록된 번호입니다.");
                     }
                 }
             } catch(InputMismatchException e){
@@ -57,15 +59,13 @@ public class LottoMachine {
 
     public void draw(List<Lotto> lottoList){
         if (winningNumber == null) {
-            System.out.println("아직 추첨 기간이 아닙니다.");
+            System.out.println("아직 추첨 전 입니다.");
         } else{
             for (Lotto lotto : lottoList) {
                 lotto.setRank(winningNumber);
             }
         }
-    }
 
-    public void stats(List<Lotto> lottoList){
         Map<String, List<Lotto>> group = new HashMap<String, List<Lotto>>();
 
         for (Lotto lotto : lottoList) {

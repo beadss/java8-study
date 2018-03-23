@@ -25,16 +25,17 @@ public class Lotto {
     }
 
     public void setRank(List<Integer> winningNumber){
-        int winCount = 0;
+        int hit = 0;
         for (Integer number : numbers) {
             for (Integer i : winningNumber) {
                 if(number == i){
-                    winCount++;
+                    hit++;
+                    break;
                 }
             }
         }
 
-        rank = Rank.getRankFromCount(winCount);
+        rank = Rank.getRankFromCount(hit);
     }
 
     public Rank getRank(){
@@ -48,16 +49,16 @@ public class Lotto {
     public static enum Rank{
         First(6, 2000000000), Second(5, 1500000), Third(4, 50000), Fourth(3, 5000);
 
-        private int count;
+        private int hit;
         private long prizeMoney;
 
         Rank(int count, long prizeMoney){
-            this.count = count;
+            this.hit = count;
             this.prizeMoney = prizeMoney;
         }
 
         public int getCount() {
-            return count;
+            return hit;
         }
         public long getPrizeMoney() {
             return prizeMoney;
