@@ -3,10 +3,11 @@ package beadss;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Vector;
-
-import beadss.lotto.NumberGenerator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 	
@@ -14,58 +15,46 @@ public class Main {
 	private static int price = 1000;
 	
 	public static void main(String[] args) {
-		NumberGenerator generator = new NumberGenerator();
 		
 		Scanner scan = new Scanner(System.in);
         
         System.out.println("구입금액을 입력해 주세요.");
         
-        int amount = scan.nextInt();
+        //int amount = scan.nextInt();
+        int amount = 14000;
         
-        Vector<List<Integer>> lottoList = new Vector<List<Integer>>(amount/price); 
+        Vector<List<Integer>> expectedLottoList = new Vector<List<Integer>>(amount/price); 
+        
+        Random random = new Random();
         
         for(int i = 0; i < amount/price; i++) {
-        	List<Integer> lotto = new ArrayList<Integer>();
-        	lottoList.add(lotto);
-        	
-        	for(int j = 0; j < 6; j++) {
-        		lotto.add(generator.generate());
-        	}
-        	
-        	System.out.println(lotto);
+        	expectedLottoList.add(Stream.generate(() -> random.nextInt(44) + 1).distinct().limit(6).collect(Collectors.toList()));
         }
         
+        expectedLottoList.stream().forEach(System.out::println);
         
         System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-        scan.nextLine();
-        String lottoExpectString = scan.nextLine();
-       
-        List<Integer> expectedLotto = new ArrayList<Integer>();
+        //scan.nextLine();
+        //String correctLottoString = scan.nextLine();
         
-        Arrays.asList(lottoExpectString.split(","))
+        String correctLottoString = "1,2,3,4,5,6";
+       
+        List<Integer> correctLotto = new ArrayList<Integer>();
+        
+        Arrays.asList(correctLottoString.split(","))
         .subList(0, 6)
         .stream()
-        .forEach((numberStr)->{expectedLotto.add(Integer.parseInt(numberStr.trim()));});
+        .forEach((numberStr)->{correctLotto.add(Integer.parseInt(numberStr.trim()));});
         
         int threeCount = 0;
         int fourCount = 0;
         int fiveCount = 0;
-        int sixCount = 0;        
+        int sixCount = 0;
         
-        for(List<Integer> lotto : lottoList) {
-        	int matchCount = 0;
-        	for(Integer number : lotto) {
-        		boolean isMatched = false;
-        		for(Integer expectedNumber : expectedLotto) {
-            		if(expectedNumber == number) {
-            			isMatched = true;
-            			break;
-            		}
-            	}
-        		if(isMatched) {
-        			matchCount++;
-        		}
-        	}
+        
+        for(List<Integer> lotto : expectedLottoList) {        	
+        	long matchCount = lotto.stream().filter((expectedNumber) -> correctLotto.stream().anyMatch((number) -> number == expectedNumber)).count();
+        	
         	if(matchCount == 3) {
         		threeCount++;
         	} else if(matchCount == 4) {
