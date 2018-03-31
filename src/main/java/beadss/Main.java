@@ -1,13 +1,6 @@
 package beadss;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,7 +13,7 @@ public class Main {
 		
 		Scanner scan = new Scanner(System.in);
         
-        System.out.println("구입금액을 입력해 주세요.");
+        System.out.println("???????? ????? ?????.");
         
         //int amount = scan.nextInt();
         int amount = 14000;
@@ -29,7 +22,6 @@ public class Main {
 	        		Stream.of(new Random().nextInt(44) + 1)
 	        		.distinct()
 					.limit(6)
-					.peek(System.out::println)
 				)
 				.limit(amount/price);
         
@@ -40,38 +32,35 @@ public class Main {
         }
         */
         
-        System.out.println("지난 주 당첨 번호를 입력해 주세요.");
+        System.out.println("???? ?? ??÷ ????? ????? ?????.");
         //scan.nextLine();
         //String correctLottoString = scan.nextLine();
         
         String correctLottoString = "1,2,3,4,5,6";
        
-        List<Integer> correctLotto = new ArrayList<Integer>();
+        List<Integer> correctLotto = Arrays.stream(correctLottoString.split(","))
+				.limit(6)
+				.map(String::trim)
+				.map(Integer::parseInt)
+				.collect(Collectors.toList());
+
+		expectedLottoList.forEach(lotto->lotto.forEach(System.out::println));
         
-        Arrays.asList(correctLottoString.split(","))
-        .subList(0, 6)
-        .stream()
-        .forEach(numberStr -> {correctLotto.add(Integer.parseInt(numberStr.trim()));});
-        
-        Map<Long, List<Long>> result = expectedLottoList
-        .map(
-    		(lotto) -> 
-    			lotto.filter(
-					expectedNumber -> correctLotto.stream().anyMatch((number) -> number == expectedNumber)
-				)
-			.count()
-		)
-        .collect(Collectors.groupingBy((count) -> count));
-        
-        System.out.println("당첨 통계");
+        Map<Long, List<Long>> result = new HashMap<>();
+        /*
+				expectedLottoList.map((lotto) -> lotto.peek(System.out::println).filter(expectedNumber -> correctLotto.contains(expectedNumber)).count())
+								.filter(count ->  count == 3 || count == 5 || count == 6)
+								.collect(Collectors.groupingBy((count) -> count));
+        */
+        System.out.println("??÷ ???");
         System.out.println("---------");
         
         
-        System.out.println(String.format("3개 일치 (5000원)- %d개", getSize(result, 3)));
-        System.out.println(String.format("4개 일치 (50000원)- %d개", getSize(result, 4)));
-        System.out.println(String.format("5개 일치 (150000원)- %d개", getSize(result, 5)));
-        System.out.println(String.format("6개 일치 (2000000000원)- %d개", getSize(result, 6)));
-        System.out.println(String.format("총 수익률은 %d%%입니다.", (getSize(result, 3)*5000+getSize(result, 4)*50000+getSize(result, 5)*150000+getSize(result, 6)*2000000000)/amount*100));
+        System.out.println(String.format("3?? ??? (5000??)- %d??", getSize(result, 3)));
+        System.out.println(String.format("4?? ??? (50000??)- %d??", getSize(result, 4)));
+        System.out.println(String.format("5?? ??? (150000??)- %d??", getSize(result, 5)));
+        System.out.println(String.format("6?? ??? (2000000000??)- %d??", getSize(result, 6)));
+        System.out.println(String.format("?? ??????? %d%%????.", (getSize(result, 3)*5000+getSize(result, 4)*50000+getSize(result, 5)*150000+getSize(result, 6)*2000000000)/amount*100));
         
 	}
 	
