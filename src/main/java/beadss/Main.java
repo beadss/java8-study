@@ -44,14 +44,11 @@ public class Main {
 				.map(Integer::parseInt)
 				.collect(Collectors.toList());
 
-		expectedLottoList.forEach(lotto->lotto.forEach(System.out::println));
-        
-        Map<Long, List<Long>> result = new HashMap<>();
-        /*
-				expectedLottoList.map((lotto) -> lotto.peek(System.out::println).filter(expectedNumber -> correctLotto.contains(expectedNumber)).count())
-								.filter(count ->  count == 3 || count == 5 || count == 6)
-								.collect(Collectors.groupingBy((count) -> count));
-        */
+        Map<Long, List<Long>> result = expectedLottoList
+				.map((lotto) -> lotto.peek(System.out::println).filter(expectedNumber -> correctLotto.contains(expectedNumber)).count())
+				.filter(count ->  count == 3 || count == 5 || count == 6)
+				.collect(Collectors.groupingBy((count) -> count));
+
         System.out.println("??¡À ???");
         System.out.println("---------");
         
