@@ -42,7 +42,7 @@ public class Lotto {
 		return Arrays.stream(numberString.split(","))
 				.map(String::trim)
 				.map(Integer::parseInt)
-				.distinct() //TODO: distinct 이하를 공용 로직으로 빼야함
+				.distinct()
 				.limit(lottoNumberCount)
 				.collect(Lotto.make());
 	}
@@ -50,19 +50,12 @@ public class Lotto {
 	public static Lotto generateRandomLotto() {
 		return Stream
 				.generate(() -> new Random().nextInt(44) + 1)
-				.distinct() //TODO: distinct 이하를 공용 로직으로 빼야함
+				.distinct()
 				.limit(lottoNumberCount)
 				.collect(Lotto.make());
 	}
 
 	public static Collector<Integer, ?, Lotto> make() {
-		//TODO: limit랑 distinct 걸어야되는데, 어떻게 걸지?!
 		return Collectors.collectingAndThen(Collectors.toList(), Lotto::new);
-		/*
-		return numberStream
-			.distinct()
-			.limit(lottoNumberCount)
-			.collect();
-			*/
 	}
 }

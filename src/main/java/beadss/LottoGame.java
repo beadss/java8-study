@@ -16,17 +16,13 @@ public class LottoGame {
 	}
 
 	public void processResult(Lotto correctLotto) {
-		Map<Rank, Long> base = Stream.of(Rank.values()).collect(Collectors.toMap(key->key,(key)->0L));
 		Map<Rank, Long> result = expectedLottoList
 				.stream()
 				.map(correctLotto::matchedCount)
 				.filter(Rank::hasValue)
 				.collect(Collectors.groupingBy(Rank::getRank, Collectors.counting()));
 
-		/*
-		TODO: 매치된 적이 없는 Rank를 위해 기본값 Map과 매치된 Map을 머지하는데, 영 어색한 느낌이 들으므로 수정이 필요함
-		 */
-		result = Stream.of(base, result)
+		result = Stream.of(makeFilledDefaultMap(), result)
 				.map(Map::entrySet)
 				.flatMap(Collection::stream)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::max));
@@ -41,9 +37,14 @@ public class LottoGame {
 				.sorted((v1, v2)->v1.getKey().getMatchCount()>v2.getKey().getMatchCount()?1:-1)
 				.peek(LottoGame::printResult)
 				.map(entry -> entry.getKey().getReward() * entry.getValue())
-				.mapToLong(Long::longValue).sum();
+				.mapToLong(Long::longValue)
+				.sum();
 
 		System.out.println(String.format("총 수익률은 %d%%입니다.", totalReward/amount*100));
+	}
+
+	private Map<Rank, Long> makeFilledDefaultMap() {
+		return Stream.of(Rank.values()).collect(Collectors.toMap(key->key,(key)->0L));
 	}
 
 	private List<Lotto> buyLotto(int amount) {
