@@ -1,34 +1,22 @@
 package sseonmi;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import sseonmi.step1.LottoGame;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Set<Integer> winningList = getRandomNumber();
+        System.out.println("구입금액 : 5000원");
+        List<Integer> winningNumberList = Stream.generate(() -> (int) (Math.random() * 45 + 1)).distinct().limit(6).sorted().collect(Collectors.toList());
 
-        System.out.println("winningNumber : " + winningList);
-
-        LottoGame lottoGame = new LottoGame(5000, winningList);
+        System.out.print("지난주 당첨 번호 : ");
+        winningNumberList.forEach(s -> System.out.print(s + ", "));
+        System.out.println();
+        LottoGame lottoGame = new LottoGame(5000, winningNumberList);
 
         System.out.println(lottoGame.start());
     }
-
-
-    /**
-     * random number
-     */
-    public static Set<Integer> getRandomNumber() {
-        Set<Integer> randomNumberSet = new HashSet<Integer>();
-        while (randomNumberSet.size() < 6) {
-            randomNumberSet.add((int) (Math.random() * 45 + 1));
-        }
-
-        return randomNumberSet;
-    }
-
 }
