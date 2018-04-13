@@ -1,21 +1,16 @@
 package joont92;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
 public class Lotto {
-    final static int NUMBER_COUNT = 6;
-    final static int MIN_NUM = 1;
-    final static int MAX_NUM = 45;
+    private final static int NUMBER_COUNT = 6;
+    private final static int MIN_NUM = 1;
+    private final static int MAX_NUM = 45;
 
     private List<Integer> numbers;
-    private Rank rank = null;
 
     public Lotto() {
         numbers = Stream.generate(Math::random)
@@ -26,19 +21,17 @@ public class Lotto {
                 .collect(toList());
     }
 
+    public List<Integer> getNumbers() {
+        return numbers;
+    }
+
+    /*
     public void setRank(List<Integer> winningNumber){
         int hit = (int)winningNumber.stream()
                 .filter(numbers::contains)
                 .count();
 
-        rank = Rank.getRankFromCount(hit);
+//        rank = Rank.getRankFromCount(hit);
     }
-
-    public Rank getRank(){
-        return rank;
-    }
-
-    public void print(){
-        System.out.println(numbers.toString());
-    }
+    */
 }
