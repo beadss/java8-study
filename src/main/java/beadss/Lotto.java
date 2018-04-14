@@ -48,11 +48,15 @@ public class Lotto {
 	}
 
 	public static Lotto generateRandomLotto() {
+		return generateRandomLottoNumber()
+				.collect(Lotto.make());
+	}
+
+	static Stream<Integer> generateRandomLottoNumber() {
 		return Stream
 				.generate(() -> new Random().nextInt(44) + 1)
 				.distinct()
-				.limit(lottoNumberCount)
-				.collect(Lotto.make());
+				.limit(lottoNumberCount);
 	}
 
 	public static Collector<Integer, ?, Lotto> make() {
