@@ -56,9 +56,9 @@ public class Lotto {
 	public static Lotto parse(String numberString) {
 		return Arrays.stream(numberString.split(","))
 				.map(String::trim)
-				.map(Integer::parseInt)
 				.distinct()
 				.limit(lottoNumberCount)
+				.map(Integer::parseInt)
 				.collect(Lotto.make());
 	}
 
