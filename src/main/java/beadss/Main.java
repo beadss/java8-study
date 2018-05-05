@@ -28,7 +28,7 @@ public class Main {
 
 		printResult(result);
 
-		System.out.println(String.format("총 수익률은 %d%%입니다.", result.getReward()/amount*100));
+		System.out.println(String.format("총 수익률은 %d%%입니다.", result.getTotalReward()/amount*100));
 
 	}
 

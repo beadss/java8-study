@@ -6,16 +6,16 @@ import java.util.Map;
 
 public class LottoResult {
 	private Map<Rank, Long> winCountEachRank;
-	private Long reward;
+	private Long totalReward;
 
 	public LottoResult(Map<Rank, Long> winCountEachRank) {
 		this.winCountEachRank = winCountEachRank;
-		this.reward = calculateReward(winCountEachRank);
+		this.totalReward = calculateTotalReward(winCountEachRank);
 	}
 
 
-	public long getReward() {
-		return reward;
+	public long getTotalReward() {
+		return totalReward;
 	}
 
 	public long getWinCount(Rank rank) {
@@ -23,7 +23,7 @@ public class LottoResult {
 	}
 
 
-	private long calculateReward(Map<Rank, Long> result) {
+	private long calculateTotalReward(Map<Rank, Long> result) {
 		return result
 				.entrySet()
 				.stream()
