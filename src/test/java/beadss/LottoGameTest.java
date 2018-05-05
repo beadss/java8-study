@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
+import org.apache.commons.collections4.MapUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -41,12 +42,13 @@ public class LottoGameTest {
 		int amount = 10000;
 
 		LottoGame game = new LottoGame(amount);
-		LottoResult result = game.processResult(Lotto.parse(""));
+		LottoResult result = game.processResult(Lotto.parse(""), 1);
 
-		assertTrue(result.getMatchInfo().get(Rank.Three).longValue() == 1);
-		assertTrue(result.getMatchInfo().get(Rank.Four).longValue() == 1);
-		assertTrue(result.getMatchInfo().get(Rank.Five).longValue() == 1);
-		assertTrue(result.getMatchInfo().get(Rank.Six).longValue() == 4);
+		assertTrue(result.getWinCount(Rank.Fifth) == 1);
+		assertTrue(result.getWinCount(Rank.Fourth) == 1);
+		assertTrue(result.getWinCount(Rank.Third) == 0);
+		assertTrue(result.getWinCount(Rank.Second) == 1);
+		assertTrue(result.getWinCount(Rank.First) == 4);
 	}
 }
 

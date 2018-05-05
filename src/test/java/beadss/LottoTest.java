@@ -48,10 +48,12 @@ public class LottoTest {
 		Lotto lotto1 = new Lotto(Arrays.asList(1,2,3,4,5,6));
 		Lotto lotto2 = new Lotto(Arrays.asList(2,3,4,5,6,7));
 
-		long matchCount1 = lotto1.matchedCount(lotto2);
-		long matchCount2 = lotto2.matchedCount(lotto1);
+		Lotto.Match match1 = lotto1.match(lotto2, 1);
+		Lotto.Match match2 = lotto2.match(lotto1, 1);
 
-		assertTrue(matchCount1 == matchCount2);
-		assertTrue(matchCount1 == 5);
+		assertTrue(match1.getCount() == match2.getCount());
+		assertTrue(match1.isBonusMatched());
+		assertFalse(match2.isBonusMatched());
+		assertTrue(match1.getCount() == 5);
 	}
 }

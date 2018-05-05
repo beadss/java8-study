@@ -1,22 +1,25 @@
 package beadss;
 
+import org.apache.commons.collections4.MapUtils;
+
 import java.util.Map;
 
 public class LottoResult {
-	private Map<Rank, Long> matchInfo;
+	private Map<Rank, Long> winCountEachRank;
 	private Long reward;
 
-	public LottoResult(Map<Rank, Long> matchInfo) {
-		this.matchInfo = matchInfo;
-		this.reward = calculateReward(matchInfo);
+	public LottoResult(Map<Rank, Long> winCountEachRank) {
+		this.winCountEachRank = winCountEachRank;
+		this.reward = calculateReward(winCountEachRank);
 	}
 
-	public Map<Rank, Long> getMatchInfo() {
-		return matchInfo;
-	}
 
 	public long getReward() {
 		return reward;
+	}
+
+	public long getWinCount(Rank rank) {
+		return MapUtils.getLongValue(winCountEachRank, rank, 0);
 	}
 
 
