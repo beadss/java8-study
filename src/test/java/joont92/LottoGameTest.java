@@ -3,7 +3,9 @@ package joont92;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,12 +17,10 @@ public class LottoGameTest {
     public void Lotto_Construct_Test(){
         Lotto lotto = new Lotto();
 
-        for(int i=0; i<100; i++){
-            Assert.assertEquals(lotto.getNumbers().stream()
-                    .distinct()
-                    .filter(n -> n > 1 && n < 45)
-                    .count(), 6);
-        }
+        Assert.assertEquals(lotto.getNumbers().stream()
+                .distinct()
+                .filter(n -> n >= 1 && n <= 45)
+                .count(), 6);
     }
 
     @Test
@@ -28,7 +28,7 @@ public class LottoGameTest {
         Assert.assertEquals(Rank.First, Rank.calculateRank(6, false));
         Assert.assertEquals(Rank.Second, Rank.calculateRank(5, true));
         Assert.assertEquals(Rank.Third, Rank.calculateRank(5, false));
-        Assert.assertNull(Rank.calculateRank(2, false));
+        Assert.assertEquals(Rank.Fail, Rank.calculateRank(2, false));
     }
 
     @Test
@@ -38,15 +38,22 @@ public class LottoGameTest {
     }
 
     @Test
-    public void WinnigNumber_Hit_Test(){
-        WinningNumber winningNumber = new WinningNumber(Arrays.asList(1,2,3,4,5,6), 7);
+    public void LottoMachine_Draw_Test(){
+        LottoMachine lottoMachine = new LottoMachine();
 
-        List<Integer> customer = Arrays.asList(2,3,4,5,6,7);
-        Assert.assertEquals(winningNumber.getHitCount(customer), 5);
-        Assert.assertTrue(winningNumber.isBonusHit(customer));
+        List<Lotto> purchaseLotto = new ArrayList<>();
+        purchaseLotto.add(new Lotto(Arrays.asList(1,2,3,4,5,6)));
+        purchaseLotto.add(new Lotto(Arrays.asList(2,3,4,5,6,7)));
+        purchaseLotto.add(new Lotto(Arrays.asList(3,4,5,6,7,8)));
 
-        customer = Arrays.asList(10,11,12,13,14,15);
-        Assert.assertEquals(winningNumber.getHitCount(customer), 0);
-        Assert.assertFalse(winningNumber.isBonusHit(customer));
+        Lotto correctLotto = new Lotto(Arrays.asList(1,2,3,4,5,9));
+        Integer bonusNumber = 6;
+
+        List<Rank> ranks = lottoMachine.draw(correctLotto, bonusNumber, purchaseLotto);
+
+        Assert.assertEquals(Collections.frequency(ranks, Rank.First), 0);
+        Assert.assertEquals(Collections.frequency(ranks, Rank.Second), 1);
+        Assert.assertEquals(Collections.frequency(ranks, Rank.Fourth), 1);
+        Assert.assertEquals(Collections.frequency(ranks, Rank.Fifth), 1);
     }
 }

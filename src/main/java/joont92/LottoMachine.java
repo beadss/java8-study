@@ -1,5 +1,7 @@
 package joont92;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,23 +31,27 @@ public class LottoMachine {
         return lottoList;
     }
 
-    public void draw(WinningNumber winningNumber, List<Lotto> lottoList){
-        List<Rank> ranks = lottoList.stream()
+    public List<Rank> draw(Lotto correctLotto, Integer bonusNumber, List<Lotto> purchasedLotto){
+        return purchasedLotto.stream()
                 .map(Lotto::getNumbers)
-                .map(l -> Rank.calculateRank(winningNumber.getHitCount(l), winningNumber.isBonusHit(l)))
-                .filter(Objects::nonNull)
+                .map(l -> Rank.calculateRank(CollectionUtils.intersection(correctLotto.getNumbers(), l).size(), l.contains(bonusNumber)))
                 .collect(Collectors.toList());
+    }
 
+    public void printResult(List<Rank> ranks){
         System.out.println("당첨 통계");
         System.out.println("--------------------");
 
         Arrays.stream(Rank.values())
-                .forEach(r -> System.out.printf("%d개 일치" + (r.isBonusHit() ? ", 보너스 볼 일치" : "") +  "(%d원) - %d개\n", r.getHit(), r.getPrizeMoney(), Collections.frequency(ranks, r)));
+                .filter(r -> r != Rank.Fail)
+                .forEach(r -> System.out.printf("%d개 일치"
+                        + (r.isBonusHit() ? ", 보너스 볼 일치" : "") +  "(%d원) - %d개\n",
+                            r.getHit(), r.getPrizeMoney(), Collections.frequency(ranks, r)));
 
         long sum = ranks.stream()
                 .mapToLong(Rank::getPrizeMoney)
                 .sum();
 
-        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (lottoList.size() * LOTTO_PRICE));
+        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (ranks.size() * LOTTO_PRICE));
     }
 }

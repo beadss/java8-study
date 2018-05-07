@@ -9,15 +9,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		LottoMachine lottoMachine = new LottoMachine();
-		List<Lotto> lottoList;
+		List<Lotto> purchasedLotto;
 
 		while(true){
 			try{
 				System.out.println("구입 금액을 입력해 주세요.");
 				Integer money = scanner.nextInt();
 
-				lottoList = lottoMachine.purchase(money);
-				if (lottoList != null) {
+				purchasedLotto = lottoMachine.purchase(money);
+				if (purchasedLotto != null) {
 					break;
 				}
 
@@ -30,19 +30,17 @@ public class Main {
 		}
 
 		System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-		List<Integer> hitNumbers = Arrays.stream(scanner.nextLine().split(","))
+		Lotto correctLotto = Arrays.stream(scanner.nextLine().split(","))
+				.map(String::trim)
 				.distinct()
 				.limit(6)
-				.map(String::trim)
 				.map(Integer::parseInt)
-				.collect(Collectors.toList());
+				.collect(Collectors.collectingAndThen(Collectors.toList(), Lotto::new));
 
 		System.out.println("보너스 볼을 입력해 주세요.");
 		Integer bonusNumber = Integer.parseInt(scanner.nextLine());
 
-		WinningNumber winningNumber = new WinningNumber(hitNumbers, bonusNumber);
-
 		// 당첨여부 확인!
-		lottoMachine.draw(winningNumber, lottoList);
+		lottoMachine.printResult(lottoMachine.draw(correctLotto, bonusNumber, purchasedLotto));
 	}
 }

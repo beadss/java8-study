@@ -1,6 +1,7 @@
 package joont92;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -21,17 +22,18 @@ public class Lotto {
                 .collect(toList());
     }
 
+    public Lotto(List<Integer> numbers){
+        this.numbers = numbers.stream()
+                .distinct()
+                .filter(n -> n >= MIN_NUM && n <= MAX_NUM)
+                .collect(Collectors.toList());
+
+        if(this.numbers.size() != NUMBER_COUNT){
+            throw new IllegalArgumentException("wrong number");
+        }
+    }
+
     public List<Integer> getNumbers() {
         return numbers;
     }
-
-    /*
-    public void setRank(List<Integer> winningNumber){
-        int hit = (int)winningNumber.stream()
-                .filter(numbers::contains)
-                .count();
-
-//        rank = Rank.getRankFromCount(hit);
-    }
-    */
 }
