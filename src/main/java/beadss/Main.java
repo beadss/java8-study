@@ -56,10 +56,10 @@ public class Main {
 	private static void printEachRankResult(Rank rank, LottoResult result) {
 		if(Rank.Second == rank) {
 			System.out.println(String.format("%d개 일치, 보너스 볼 일치(%d원)- %d개",
-					LottoGame.getMatchCount(rank), rank.getReward(), result.getWinCount(rank)));
+					rank.getMatchCount(), rank.getReward(), result.getWinCount(rank)));
 		} else {
 			System.out.println(String.format("%d개 일치(%d원)- %d개",
-					LottoGame.getMatchCount(rank), rank.getReward(), result.getWinCount(rank)));
+					rank.getMatchCount(), rank.getReward(), result.getWinCount(rank)));
 		}
 
 	}

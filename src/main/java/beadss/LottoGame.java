@@ -35,45 +35,30 @@ public class LottoGame {
 
 		return expectedLottoList
 				.stream()
-				.map(expected -> correctLotto.match(expected, bonusNumber))
+				.map(expected -> expected.match(correctLotto, bonusNumber))
 				.filter(this::atLeast)
 				.collect(Collectors.collectingAndThen(
 						Collectors.groupingBy(this::getRank, Collectors.counting()),
 						LottoResult::new));
 	}
 
-
-	public static long getMatchCount(Rank rank) {
-		if(rank == Rank.First) {
-			return 6;
-		} else if(rank == Rank.Second || rank == Rank.Third) {
-			return 5;
-		} else if(rank == Rank.Fourth) {
-			return 4;
-		} else if(rank == Rank.Fifth) {
-			return 3;
-		} else {
-			return 0;
-		}
-	}
-
 	private boolean atLeast(Lotto.Match match) {
-		return match.getCount() >= 3;
+		return match.getCount() >= Rank.Fifth.getMatchCount();
 	}
 
 	private Rank getRank(Lotto.Match match) {
-		if(match.getCount() == 6) {
+		if(match.getCount() == Rank.First.getMatchCount()) {
 			return Rank.First;
-		} else if(match.getCount() == 5 && match.isBonusMatched()) {
+		} else if(match.getCount() == Rank.Second.getMatchCount() && match.isBonusMatched()) {
 			return Rank.Second;
-		} else if(match.getCount() == 5) {
+		} else if(match.getCount() == Rank.Third.getMatchCount()) {
 			return Rank.Third;
-		} else if(match.getCount() == 4) {
+		} else if(match.getCount() == Rank.Fourth.getMatchCount()) {
 			return Rank.Fourth;
-		} else if(match.getCount() == 3) {
+		} else if(match.getCount() == Rank.Fifth.getMatchCount()) {
 			return Rank.Fifth;
 		} else {
-			return null;
+			throw new IllegalArgumentException("알 수 없는 Rank임");
 		}
 	}
 

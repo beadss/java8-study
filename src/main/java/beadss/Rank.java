@@ -1,15 +1,17 @@
 package beadss;
 
 public enum Rank {
-	Fifth(5000),
-	Fourth(50000),
-	Third(150000),
-	Second(30000000),
-	First(2000000000);
+	Fifth(3, 5000),
+	Fourth(4, 50000),
+	Third(5, 150000),
+	Second(5, 30000000),
+	First(6, 2000000000);
 
+	private int matchCount;
 	private int reward;
 
-	Rank(int reward) {
+	Rank(int matchCount, int reward) {
+		this.matchCount = matchCount;
 		this.reward = reward;
 	}
 
@@ -18,4 +20,7 @@ public enum Rank {
 	}
 
 
+	public int getMatchCount() {
+		return matchCount;
+	}
 }
