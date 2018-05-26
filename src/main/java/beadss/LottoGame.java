@@ -1,50 +1,61 @@
 package beadss;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LottoGame {
 	private static int price = 1000;
 
-	private int amount;
 	private List<Lotto> expectedLottoList;
 
 	public LottoGame(int amount) {
-		this.amount = amount;
 		this.expectedLottoList = buyLotto(amount);
 	}
 
-	public void processResult(Lotto correctLotto) {
-		Map<Rank, Long> result = expectedLottoList
+	public LottoResult processResult(Lotto correctLotto, int bonusNumber) {
+		return expectedLottoList
 				.stream()
-				.map(correctLotto::matchedCount)
-				.filter(Rank::hasValue)
-				.collect(Collectors.groupingBy(Rank::getRank, Collectors.counting()));
-
-		result = Stream.of(makeFilledDefaultMap(), result)
-				.map(Map::entrySet)
-				.flatMap(Collection::stream)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::max));
-
-
-		System.out.println("당첨 통계");
-		System.out.println("---------");
-
-		final Long totalReward = result
-				.entrySet()
-				.stream()
-				.sorted((v1, v2)->v1.getKey().getMatchCount()>v2.getKey().getMatchCount()?1:-1)
-				.peek(LottoGame::printResult)
-				.map(entry -> entry.getKey().getReward() * entry.getValue())
-				.mapToLong(Long::longValue)
-				.sum();
-
-		System.out.println(String.format("총 수익률은 %d%%입니다.", totalReward/amount*100));
+				.map(expected -> correctLotto.match(expected, bonusNumber))
+				.filter(this::atLeast)
+				.collect(Collectors.collectingAndThen(
+						Collectors.groupingBy(this::getRank, Collectors.counting()),
+						LottoResult::new));
 	}
 
-	private Map<Rank, Long> makeFilledDefaultMap() {
-		return Stream.of(Rank.values()).collect(Collectors.toMap(key->key,(key)->0L));
+
+	public static long getMatchCount(Rank rank) {
+		if(rank == Rank.First) {
+			return 6;
+		} else if(rank == Rank.Second || rank == Rank.Third) {
+			return 5;
+		} else if(rank == Rank.Fourth) {
+			return 4;
+		} else if(rank == Rank.Fifth) {
+			return 3;
+		} else {
+			return 0;
+		}
+	}
+
+	private boolean atLeast(Lotto.Match match) {
+		return match.getCount() >= 3;
+	}
+
+	private Rank getRank(Lotto.Match match) {
+		if(match.getCount() == 6) {
+			return Rank.First;
+		} else if(match.getCount() == 5 && match.isBonusMatched()) {
+			return Rank.Second;
+		} else if(match.getCount() == 5) {
+			return Rank.Third;
+		} else if(match.getCount() == 4) {
+			return Rank.Fourth;
+		} else if(match.getCount() == 3) {
+			return Rank.Fifth;
+		} else {
+			return null;
+		}
 	}
 
 	private List<Lotto> buyLotto(int amount) {
@@ -52,11 +63,5 @@ public class LottoGame {
 						.limit(amount/price)
 						.peek(System.out::println)
 						.collect(Collectors.toList());
-	}
-
-	private static void printResult(Map.Entry<Rank, Long> result) {
-		final Rank rank = result.getKey();
-		final Long hitCount = result.getValue();
-		System.out.println(String.format("%d개 일치(%d원)- %d개", rank.getMatchCount(), rank.getReward(), hitCount));
 	}
 }
