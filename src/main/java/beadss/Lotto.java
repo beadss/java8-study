@@ -8,6 +8,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Lotto {
+	public class Match {
+		private long count;
+		private boolean bonusMatched;
+
+		private Match(long count, boolean bonusMatched) {
+			this.count = count;
+			this.bonusMatched = bonusMatched;
+		}
+
+		public long getCount() {return count;}
+		public boolean isBonusMatched() {return bonusMatched;}
+	}
 
 	private static int lottoNumberCount = 6;
 
@@ -25,8 +37,11 @@ public class Lotto {
 		return numberList;
 	}
 
-	public long matchedCount(Lotto other) {
-		return getNumberList().stream().filter(other::contains).count();
+	public Match match(Lotto other, int bonusNumber) {
+		final long matchCount = getNumberList().stream().filter(other::contains).count();
+		final boolean bonusMatched = other.contains(bonusNumber);
+
+		return new Match(matchCount, bonusMatched);
 	}
 
 	private boolean contains(int number) {
@@ -41,18 +56,22 @@ public class Lotto {
 	public static Lotto parse(String numberString) {
 		return Arrays.stream(numberString.split(","))
 				.map(String::trim)
-				.map(Integer::parseInt)
 				.distinct()
 				.limit(lottoNumberCount)
+				.map(Integer::parseInt)
 				.collect(Lotto.make());
 	}
 
 	public static Lotto generateRandomLotto() {
+		return generateRandomLottoNumber()
+				.collect(Lotto.make());
+	}
+
+	static Stream<Integer> generateRandomLottoNumber() {
 		return Stream
 				.generate(() -> new Random().nextInt(44) + 1)
 				.distinct()
-				.limit(lottoNumberCount)
-				.collect(Lotto.make());
+				.limit(lottoNumberCount);
 	}
 
 	public static Collector<Integer, ?, Lotto> make() {
