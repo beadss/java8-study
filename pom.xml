@@ -55,7 +55,6 @@
 			<version>3.20.0-GA</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
