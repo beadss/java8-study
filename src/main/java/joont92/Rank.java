@@ -28,7 +28,7 @@ public enum Rank{
         return prizeMoney;
     }
 
-    public static Rank calculateRank(int hit, boolean isBonusHit){
+    public static Rank calculate(int hit, boolean isBonusHit){
         return Stream.of(Rank.values())
                 .filter(r -> {
                     if(r == Second){
