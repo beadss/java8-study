@@ -19,9 +19,6 @@ public class DomainUtil {
                 lotto = Arrays.stream(scanner.nextLine().split(","))
                         .map(String::trim)
                         .map(Integer::parseInt)
-                        .filter(i -> (i >= 1 && i <=45))
-                        .distinct()
-                        .limit(6)
                         .collect(Collectors.collectingAndThen(Collectors.toList(), Lotto::new));
                 break;
             } catch(IllegalArgumentException | InputMismatchException e){

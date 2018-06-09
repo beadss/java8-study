@@ -1,18 +1,18 @@
 package joont92;
 
-public class PurchaseInfo {
+public class Purchase {
     public static final int LOTTO_PRICE = 1000;
     public static final int LIMIT_PRICE = 100000;
     private int manualCnt;
     private int autoCnt;
 
-    public PurchaseInfo(int money){
+    public Purchase(int money){
         this.manualCnt = 0;
-        this.autoCnt = moneyToPossibleCnt(money);
+        this.autoCnt = computeAmount(money);
     }
 
-    public PurchaseInfo(int money, int manualCnt){
-        this.autoCnt = moneyToPossibleCnt(money);
+    public Purchase(int money, int manualCnt){
+        this.autoCnt = computeAmount(money);
         if(this.autoCnt >= manualCnt){
             this.autoCnt -= manualCnt;
             this.manualCnt = manualCnt;
@@ -21,7 +21,7 @@ public class PurchaseInfo {
         }
     }
 
-    private int moneyToPossibleCnt(int money){
+    private int computeAmount(int money){
         if(money < LOTTO_PRICE){
             System.out.printf("최소 구입금액 : %d\n", LOTTO_PRICE);
             return 0;

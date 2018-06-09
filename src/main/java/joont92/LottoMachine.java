@@ -7,27 +7,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LottoMachine {
-    public List<Lotto> purchase(PurchaseInfo availableLottoCnt){
-        List<Lotto> lottoList;
-
+    public List<Lotto> purchase(Purchase availableLottoCnt){
         if(availableLottoCnt.getManualCnt() > 0){
             System.out.println("수동으로 구매할 번호를 입력해 주세요.");
         }
 
-        Stream<Lotto> manualStream = Stream.generate(DomainUtil::makeLottoFromStdin)
-                .limit(availableLottoCnt.getManualCnt());
-
-        Stream<Lotto> autoStream = Stream.generate(Lotto::new)
-                .limit(availableLottoCnt.getAutoCnt());
-
-        lottoList = Stream.concat(manualStream, autoStream)
+        return Stream.concat(
+                Stream.generate(DomainUtil::makeLottoFromStdin)
+                .limit(availableLottoCnt.getManualCnt()),
+                Stream.generate(Lotto::new)
+                .limit(availableLottoCnt.getAutoCnt()))
                 .collect(Collectors.toList());
-
-
-        System.out.printf("수동으로 %d개, 자동으로 %d개를 구매했습니다.\n", availableLottoCnt.getManualCnt(), availableLottoCnt.getAutoCnt());
-        lottoList.forEach(l -> System.out.println(l.getNumbers()));
-
-        return lottoList;
     }
 
     public List<Rank> draw(Lotto correctLotto, Bonus bonus, List<Lotto> purchasedLotto){
@@ -51,6 +41,6 @@ public class LottoMachine {
                 .mapToLong(Rank::getPrizeMoney)
                 .sum();
 
-        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (ranks.size() * PurchaseInfo.LOTTO_PRICE));
+        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (ranks.size() * Purchase.LOTTO_PRICE));
     }
 }

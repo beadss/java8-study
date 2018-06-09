@@ -25,13 +25,17 @@ public class Lotto {
     public Lotto(List<Integer> numbers){
         this.numbers = numbers.stream()
                 .distinct()
-                .filter(n -> n >= MIN_NUM && n <= MAX_NUM)
+                .filter(Lotto::rangeCheck)
                 .limit(NUMBER_COUNT)
                 .collect(Collectors.toList());
 
         if(this.numbers.size() < NUMBER_COUNT){
             throw new IllegalArgumentException("invalid range");
         }
+    }
+
+    public static boolean rangeCheck(Integer number){
+        return number >= MIN_NUM && number <= MAX_NUM;
     }
 
     public List<Integer> getNumbers() {

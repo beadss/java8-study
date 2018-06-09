@@ -13,8 +13,8 @@ public class LottoMachineTest {
 
     @Test
     public void LottoMachine_Purchase_Test(){
-        Assert.assertEquals(lottoMachine.purchase(new PurchaseInfo(900)).size(), 0);
-        Assert.assertEquals(lottoMachine.purchase(new PurchaseInfo(10000)).size(), 10);
+        Assert.assertEquals(lottoMachine.purchase(new Purchase(900)).size(), 0);
+        Assert.assertEquals(lottoMachine.purchase(new Purchase(10000)).size(), 10);
     }
 
     @Test
