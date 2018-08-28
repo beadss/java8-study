@@ -1,11 +1,9 @@
 package joont92;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Main {
-	static final Scanner scanner = new Scanner(System.in);
+	private static final Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
 		LottoMachine lottoMachine = new LottoMachine();
@@ -16,8 +14,15 @@ public class Main {
 				System.out.println("구입 금액을 입력해 주세요.");
 				Integer money = scanner.nextInt();
 
-				purchasedLotto = lottoMachine.purchase(money);
-				if (purchasedLotto != null) {
+                System.out.println("수동으로 구매할 로또 수를 입력해 주세요.");
+				Integer manualCnt = scanner.nextInt();
+
+				Purchase availableLottoCnt = new Purchase(money, manualCnt);
+				purchasedLotto = lottoMachine.purchase(availableLottoCnt);
+
+				System.out.printf("수동으로 %d개, 자동으로 %d개를 구매했습니다.\n", availableLottoCnt.getManualCnt(), availableLottoCnt.getAutoCnt());
+				if (purchasedLotto.size() > 0) {
+					purchasedLotto.forEach(l -> System.out.println(l.getNumbers()));
 					break;
 				}
 
@@ -30,17 +35,12 @@ public class Main {
 		}
 
 		System.out.println("지난 주 당첨 번호를 입력해 주세요.");
-		Lotto correctLotto = Arrays.stream(scanner.nextLine().split(","))
-				.map(String::trim)
-				.distinct()
-				.limit(6)
-				.map(Integer::parseInt)
-				.collect(Collectors.collectingAndThen(Collectors.toList(), Lotto::new));
+		Lotto correctLotto = DomainUtil.makeLottoFromStdin();
 
 		System.out.println("보너스 볼을 입력해 주세요.");
-		Integer bonusNumber = Integer.parseInt(scanner.nextLine());
+		Bonus bonus = DomainUtil.makeBonusFromStdin(correctLotto);
 
 		// 당첨여부 확인!
-		lottoMachine.printResult(lottoMachine.draw(correctLotto, bonusNumber, purchasedLotto));
+		lottoMachine.printResult(lottoMachine.draw(correctLotto, bonus, purchasedLotto));
 	}
 }

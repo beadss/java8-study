@@ -7,9 +7,9 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 public class Lotto {
-    private final static int NUMBER_COUNT = 6;
-    private final static int MIN_NUM = 1;
-    private final static int MAX_NUM = 45;
+    public static final int NUMBER_COUNT = 6;
+    public static final int MIN_NUM = 1;
+    public static final int MAX_NUM = 45;
 
     private List<Integer> numbers;
 
@@ -25,12 +25,17 @@ public class Lotto {
     public Lotto(List<Integer> numbers){
         this.numbers = numbers.stream()
                 .distinct()
-                .filter(n -> n >= MIN_NUM && n <= MAX_NUM)
+                .filter(Lotto::rangeCheck)
+                .limit(NUMBER_COUNT)
                 .collect(Collectors.toList());
 
-        if(this.numbers.size() != NUMBER_COUNT){
-            throw new IllegalArgumentException("wrong number");
+        if(this.numbers.size() < NUMBER_COUNT){
+            throw new IllegalArgumentException("invalid range");
         }
+    }
+
+    public static boolean rangeCheck(Integer number){
+        return number >= MIN_NUM && number <= MAX_NUM;
     }
 
     public List<Integer> getNumbers() {

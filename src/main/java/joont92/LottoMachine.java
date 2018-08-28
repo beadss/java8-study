@@ -7,34 +7,23 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class LottoMachine {
-    private static final int LOTTO_PRICE = 1000;
-    private static final int LIMIT_PRICE = 100000;
-
-    public List<Lotto> purchase(int money){
-        List<Lotto> lottoList = null;
-
-        if(money < LOTTO_PRICE){
-            System.out.printf("최소 구입금액 : %d\n", LOTTO_PRICE);
-        } else if(money > LIMIT_PRICE){
-            System.out.printf("최대 구입금액 : %d\n", LIMIT_PRICE);
-        } else{
-            int count = money / LOTTO_PRICE;
-            System.out.printf("%d개를 구매했습니다\n", count);
-
-            lottoList = Stream.generate(Lotto::new)
-                    .limit(count)
-                    .collect(Collectors.toList());
-
-            lottoList.forEach(l -> System.out.println(l.getNumbers()));
+    public List<Lotto> purchase(Purchase availableLottoCnt){
+        if(availableLottoCnt.getManualCnt() > 0){
+            System.out.println("수동으로 구매할 번호를 입력해 주세요.");
         }
 
-        return lottoList;
+        return Stream.concat(
+                Stream.generate(DomainUtil::makeLottoFromStdin)
+                .limit(availableLottoCnt.getManualCnt()),
+                Stream.generate(Lotto::new)
+                .limit(availableLottoCnt.getAutoCnt()))
+                .collect(Collectors.toList());
     }
 
-    public List<Rank> draw(Lotto correctLotto, Integer bonusNumber, List<Lotto> purchasedLotto){
+    public List<Rank> draw(Lotto correctLotto, Bonus bonus, List<Lotto> purchasedLotto){
         return purchasedLotto.stream()
                 .map(Lotto::getNumbers)
-                .map(l -> Rank.calculateRank(CollectionUtils.intersection(correctLotto.getNumbers(), l).size(), l.contains(bonusNumber)))
+                .map(l -> Rank.calculate(CollectionUtils.intersection(correctLotto.getNumbers(), l).size(), l.contains(bonus.getNumber())))
                 .collect(Collectors.toList());
     }
 
@@ -52,6 +41,6 @@ public class LottoMachine {
                 .mapToLong(Rank::getPrizeMoney)
                 .sum();
 
-        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (ranks.size() * LOTTO_PRICE));
+        System.out.printf("총 수익률은 %d%%입니다\n", (sum * 100) / (ranks.size() * Purchase.LOTTO_PRICE));
     }
 }
