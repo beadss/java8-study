@@ -1,17 +1,18 @@
 package beadss;
 
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-
-import org.apache.commons.collections4.MapUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Lotto.class)
@@ -41,7 +42,8 @@ public class LottoGameTest {
 
 		int amount = 10000;
 
-		LottoGame game = new LottoGame(amount);
+		LottoGame game = new LottoGame(amount, Arrays.asList(lottoForTest7, lottoForTest7, lottoForTest7));
+
 		LottoResult result = game.processResult(Lotto.parse(""), 1);
 
 		assertTrue(result.getWinCount(Rank.Fifth) == 1);
@@ -49,6 +51,23 @@ public class LottoGameTest {
 		assertTrue(result.getWinCount(Rank.Third) == 0);
 		assertTrue(result.getWinCount(Rank.Second) == 1);
 		assertTrue(result.getWinCount(Rank.First) == 4);
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void overManualCount() {
+		Lotto lottoForTest = new Lotto(Arrays.asList(11,12,13,14,15,16));
+
+		int amount = 10000;;
+
+		List<Lotto> manualList = new ArrayList<>();
+
+		for(int i = 0; i < amount/LottoGame.PRICE + 1; i++) {
+			manualList.add(lottoForTest);
+		}
+
+
+		//expect exception
+		new LottoGame(amount, manualList);
 	}
 }
 

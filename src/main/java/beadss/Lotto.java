@@ -26,8 +26,17 @@ public class Lotto {
 	private List<Integer> numberList;
 
 	public Lotto(List<Integer> numberList) {
-		if(numberList == null || numberList.size() < lottoNumberCount) {
+		if(numberList == null || numberList.size() != lottoNumberCount) {
 			throw new IllegalArgumentException("use brain");
+		}
+
+		final int validCount = (int)numberList.stream()
+				.distinct()
+				.filter(this::isValid)
+				.count();
+
+		if(validCount != lottoNumberCount) {
+			throw new IllegalArgumentException("1~45 사이의 유일한 값들로만 이루어져있어야함");
 		}
 
 		this.numberList = numberList;
@@ -39,9 +48,8 @@ public class Lotto {
 
 	public Match match(Lotto other, int bonusNumber) {
 		final long matchCount = getNumberList().stream().filter(other::contains).count();
-		final boolean bonusMatched = other.contains(bonusNumber);
 
-		return new Match(matchCount, bonusMatched);
+		return new Match(matchCount, contains(bonusNumber));
 	}
 
 	private boolean contains(int number) {
@@ -56,10 +64,12 @@ public class Lotto {
 	public static Lotto parse(String numberString) {
 		return Arrays.stream(numberString.split(","))
 				.map(String::trim)
-				.distinct()
-				.limit(lottoNumberCount)
 				.map(Integer::parseInt)
 				.collect(Lotto.make());
+	}
+
+	private boolean isValid(Integer number) {
+		return number >= 1 && number <= 45;
 	}
 
 	public static Lotto generateRandomLotto() {
